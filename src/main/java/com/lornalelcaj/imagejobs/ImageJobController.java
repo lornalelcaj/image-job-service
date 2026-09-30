@@ -24,8 +24,12 @@ public class ImageJobController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ImageJob create(@RequestParam("file") MultipartFile file) throws IOException {
-        return service.submit(file);
+    public ImageJob create(@RequestParam("file") MultipartFile file,
+                           @RequestParam(defaultValue = "GRAYSCALE") JobType type,
+                           @RequestParam(defaultValue = "4") int rows,
+                           @RequestParam(defaultValue = "5") int cols,
+                           @RequestParam(required = false) Long seed) throws IOException {
+        return service.submit(file, type, rows, cols, seed);
     }
 
     @GetMapping
@@ -54,5 +58,16 @@ public class ImageJobController {
     @PostMapping("/{id}/cancel")
     public ImageJob cancel(@PathVariable Long id) {
         return service.cancel(id);
+    }
+
+    @GetMapping("/{id}/pieces")
+    public PuzzleInfo pieces(@PathVariable Long id) {
+        return service.pieces(id);
+    }
+
+    @GetMapping(value = "/{id}/pieces/{row}/{col}", produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] piece(@PathVariable Long id, @PathVariable int row, @PathVariable int col)
+            throws IOException {
+        return service.pieceImage(id, row, col);
     }
 }

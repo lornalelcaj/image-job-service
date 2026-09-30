@@ -50,4 +50,15 @@ class ImageJobTest {
 
         assertThat(job.isFinished()).isFalse();
     }
+
+    @Test
+    void puzzleJobStoresItsSettings() {
+        ImageJob job = new ImageJob("photo.jpg", "/tmp/input", JobType.PUZZLE, 4, 6, 42L);
+
+        assertThat(job.getType()).isEqualTo(JobType.PUZZLE);
+        assertThat(job.getPuzzleRows()).isEqualTo(4);
+        assertThat(job.getPuzzleCols()).isEqualTo(6);
+        assertThat(job.getSeed()).isEqualTo(42L);
+        assertThat(job.getStatus()).isEqualTo(JobStatus.PENDING);
+    }
 }
