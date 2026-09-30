@@ -57,7 +57,9 @@ The API is then available at `http://localhost:8080`.
 | `GET` | `/jobs/{id}` | Get a job's status |
 | `GET` | `/jobs/{id}/result` | Download the processed PNG (`409` if not finished) |
 | `POST` | `/jobs/{id}/cancel` | Cancel a pending or running job (`409` if already finished) |
-
+| `POST` | `/jobs` | … optional fields: `type=PUZZLE`, `rows`, `cols`, `seed` |
+| `GET` | `/jobs/{id}/pieces` | List puzzle pieces with their positions and image URLs |
+| `GET` | `/jobs/{id}/pieces/{row}/{col}` | Download one piece as a transparent PNG |
 
 Example:
 
