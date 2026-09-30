@@ -15,6 +15,7 @@ Uploading returns immediately with a job ID. Processing runs on Java 21 virtual 
 - Unit tests with JUnit 5, AssertJ and Mockito
 - CI with GitHub Actions, running the tests against a real PostgreSQL service
 - One-command setup with Docker Compose
+- Limit on concurrently running jobs, and optimistic locking on job updates
 
 ## Architecture
 
@@ -55,6 +56,8 @@ The API is then available at `http://localhost:8080`.
 | `GET` | `/jobs` | List all jobs |
 | `GET` | `/jobs/{id}` | Get a job's status |
 | `GET` | `/jobs/{id}/result` | Download the processed PNG (`409` if not finished) |
+| `POST` | `/jobs/{id}/cancel` | Cancel a pending or running job (`409` if already finished) |
+
 
 Example:
 
@@ -82,5 +85,4 @@ docker run --name imagejobs-db -e POSTGRES_USER=imagejobs -e POSTGRES_PASSWORD=i
 
 - Jigsaw puzzle generation: cut an uploaded image into puzzle pieces, generated in parallel
 - Angular frontend for uploading images and viewing the generated pieces
-- Limit on concurrently running jobs, and optimistic locking on job updates
 - CUDA-based processing backend, benchmarked against the CPU implementation

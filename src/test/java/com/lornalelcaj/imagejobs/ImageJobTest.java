@@ -33,4 +33,21 @@ class ImageJobTest {
         assertThat(job.getStatus()).isEqualTo(JobStatus.FAILED);
         assertThat(job.getErrorMessage()).isEqualTo("File is not a supported image format");
     }
+
+    @Test
+    void cancelledJobIsFinished() {
+        ImageJob job = new ImageJob("photo.jpg", "/tmp/input");
+
+        job.markCancelled();
+
+        assertThat(job.getStatus()).isEqualTo(JobStatus.CANCELLED);
+        assertThat(job.isFinished()).isTrue();
+    }
+
+    @Test
+    void pendingJobIsNotFinished() {
+        ImageJob job = new ImageJob("photo.jpg", "/tmp/input");
+
+        assertThat(job.isFinished()).isFalse();
+    }
 }

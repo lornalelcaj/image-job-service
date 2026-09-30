@@ -21,6 +21,19 @@ public class ImageJob {
     private String outputPath;
     private String errorMessage;
 
+    @Version
+    private Long version;
+
+    public void markCancelled() {
+        this.status = JobStatus.CANCELLED;
+    }
+
+    public boolean isFinished() {
+        return status == JobStatus.DONE
+                || status == JobStatus.FAILED
+                || status == JobStatus.CANCELLED;
+    }
+
     protected ImageJob() {} // required by JPA
 
     public ImageJob(String filename, String inputPath) {

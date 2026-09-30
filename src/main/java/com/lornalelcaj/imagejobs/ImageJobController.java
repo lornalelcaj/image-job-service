@@ -51,4 +51,8 @@ public class ImageJobController {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+    @PostMapping("/{id}/cancel")
+    public ImageJob cancel(@PathVariable Long id) {
+        return service.cancel(id);
+    }
 }
