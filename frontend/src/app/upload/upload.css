@@ -1,0 +1,12 @@
+label {
+  display: block;
+  margin: 8px 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+.error {
+  color: #c62828;
+}

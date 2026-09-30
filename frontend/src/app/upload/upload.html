@@ -1,0 +1,36 @@
+<input type="file" accept="image/*" (change)="onFileSelected($event)" />
+<p>Selected: {{ file()?.name }}</p>
+
+<label>
+  Rows: {{ rows() }}
+  <input type="range" min="2" max="10" [value]="rows()"
+         (input)="rows.set(+$any($event.target).value)" />
+</label>
+
+<label>
+  Columns: {{ cols() }}
+  <input type="range" min="2" max="10" [value]="cols()"
+         (input)="cols.set(+$any($event.target).value)" />
+</label>
+
+<p>{{ rows() * cols() }} pieces</p>
+
+<button type="button" [disabled]="!file()" (click)="generate()">
+  Generate puzzle
+</button>
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+
+@if (job(); as current) {
+  <p>Status: {{ current.status }}</p>
+
+  @if (current.status === 'FAILED') {
+    <p class="error">{{ current.errorMessage }}</p>
+  }
+
+  @if (current.status === 'DONE') {
+    <app-board [jobId]="current.id" />
+  }
+}

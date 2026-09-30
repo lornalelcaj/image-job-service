@@ -1,0 +1,42 @@
+<div class="status">
+  @if (solvedSeconds() !== null) {
+    <p class="solved">
+      🎉 Solved in {{ formatTime(solvedSeconds()!) }} with {{ moves() }} moves!
+    </p>
+  } @else {
+    <p>{{ placedCount() }} / {{ pieces().length }} pieces placed · {{ moves() }} moves</p>
+  }
+</div>
+
+<div class="board-wrapper"
+     [style.width.px]="boardWidth() * scale()"
+     [style.height.px]="boardHeight() * scale()">
+  <div class="board"
+       [style.width.px]="boardWidth()"
+       [style.height.px]="boardHeight()"
+       [style.transform]="'scale(' + scale() + ')'">
+
+    <div class="frame"
+         [style.left.px]="frame().left"
+         [style.top.px]="frame().top"
+         [style.width.px]="frame().width"
+         [style.height.px]="frame().height"></div>
+
+    @for (piece of pieces(); track piece.info.url) {
+      <img class="piece"
+           [class.placed]="piece.placed()"
+           [src]="piece.info.url"
+           [style.left.px]="piece.left()"
+           [style.top.px]="piece.top()"
+           [style.width.px]="piece.info.width"
+           [style.height.px]="piece.info.height"
+           [style.z-index]="piece.z()"
+           draggable="false"
+           alt=""
+           (pointerdown)="onPointerDown($event, piece)"
+           (pointermove)="onPointerMove($event, piece)"
+           (pointerup)="onPointerUp(piece)"
+           (pointercancel)="onPointerUp(piece)" />
+    }
+  </div>
+</div>

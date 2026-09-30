@@ -3,7 +3,7 @@ services:
     image: postgres:16
     environment:
       POSTGRES_USER: imagejobs
-      POSTGRES_PASSWORD: imagejobs
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-imagejobs}
       POSTGRES_DB: imagejobs
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -15,15 +15,21 @@ services:
 
   app:
     build: .
-    ports:
-      - "8080:8080"
     environment:
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-imagejobs}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/imagejobs
     volumes:
       - image-storage:/app/storage
     depends_on:
       db:
         condition: service_healthy
+
+  web:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - app
 
 volumes:
   db-data:

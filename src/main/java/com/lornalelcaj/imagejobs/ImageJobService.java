@@ -1,5 +1,7 @@
 package com.lornalelcaj.imagejobs;
-
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.util.Iterator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -29,18 +31,20 @@ public class ImageJobService {
     private final PuzzleGenerator puzzleGenerator;
     private final Semaphore permits;
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-    private final Path storageDir = Path.of("storage").toAbsolutePath();
+    private final Path storageDir;
+    private static final long MAX_PIXELS = 40_000_000L; // 40 megapixels
 
     public ImageJobService(ImageJobRepository repository,
                            ImageProcessor processor,
                            PuzzleGenerator puzzleGenerator,
-                           @Value("${imagejobs.max-concurrent-jobs:4}") int maxConcurrentJobs) {
+                           @Value("${imagejobs.max-concurrent-jobs:4}") int maxConcurrentJobs,
+                           @Value("${imagejobs.storage-dir:storage}") String storageDir) {
         this.repository = repository;
         this.processor = processor;
         this.puzzleGenerator = puzzleGenerator;
         this.permits = new Semaphore(maxConcurrentJobs);
+        this.storageDir = Path.of(storageDir).toAbsolutePath();
     }
-
     public ImageJob submit(MultipartFile file, JobType type, int rows, int cols, Long seed)
             throws IOException {
         if (type == JobType.PUZZLE && (rows < 2 || rows > 20 || cols < 2 || cols > 20)) {
