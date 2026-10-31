@@ -247,4 +247,7 @@ public class PuzzleRoom {
             this.y = y;
         }
     }
+    public synchronized int playerCount() {
+        return players.size();
+    }
 }

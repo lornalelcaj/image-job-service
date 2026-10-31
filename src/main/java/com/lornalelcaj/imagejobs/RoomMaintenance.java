@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 /** Background tasks that keep the multiplayer rooms healthy. */
 @Component
@@ -28,7 +29,13 @@ public class RoomMaintenance {
     public void expireLocks() {
         Instant now = Instant.now();
         for (PuzzleRoom room : rooms.all()) {
-            sockets.publish(room, r -> r.expireLocks(now));
+            sockets.publish(room, r -> {
+                List<Object> released = r.expireLocks(now);
+                if (!released.isEmpty()) {
+                    log.info("Released {} expired locks in room {}", released.size(), r.code());
+                }
+                return released;
+            });
         }
     }
 

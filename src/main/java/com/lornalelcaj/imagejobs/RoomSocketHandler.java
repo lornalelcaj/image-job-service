@@ -73,6 +73,7 @@ public class RoomSocketHandler extends TextWebSocketHandler {
                     .put(session.getId(), safeSession);
 
             send(safeSession, room.stateFor(session.getId()));
+            log.info("Player joined room {} ({} players)", room.code(), room.playerCount());
             broadcast(room.code(), List.of(room.playersMessage()));
         }
     }
@@ -122,6 +123,7 @@ public class RoomSocketHandler extends TextWebSocketHandler {
                 }
             }
             broadcast(room.code(), room.leave(session.getId(), Instant.now()));
+            log.info("Player left room {} ({} players)", room.code(), room.playerCount());
         }
     }
 

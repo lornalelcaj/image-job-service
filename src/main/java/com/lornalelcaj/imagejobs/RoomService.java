@@ -12,12 +12,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Keeps the open multiplayer rooms in memory.
  * Rooms are not stored in the database, so a server restart ends all running games.
  */
 @Service
 public class RoomService {
+    private static final Logger log = LoggerFactory.getLogger(RoomService.class);
 
     /** Letters and digits that are easy to read and type (no 0/O or 1/I). */
     private static final String CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -44,6 +47,7 @@ public class RoomService {
             String code = newCode();
             PuzzleRoom room = new PuzzleRoom(code, jobId, puzzle, random.nextLong(), Instant.now());
             if (rooms.putIfAbsent(code, room) == null) {
+                log.info("Created room {} for job {}", code, jobId);
                 return room;
             }
             // a room with this code already exists, so try another one

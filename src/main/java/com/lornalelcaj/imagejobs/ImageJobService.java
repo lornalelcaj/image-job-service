@@ -2,6 +2,8 @@ package com.lornalelcaj.imagejobs;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.util.Iterator;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -22,9 +24,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class ImageJobService {
+    private static final Logger log = LoggerFactory.getLogger(ImageJobService.class);
 
     private final ImageJobRepository repository;
     private final ImageProcessor processor;
@@ -149,7 +153,7 @@ public class ImageJobService {
         } catch (ObjectOptimisticLockingFailureException e) {
             return; // cancelled just before it started
         }
-
+        long started = System.nanoTime();
         try {
             BufferedImage input = ImageIO.read(Path.of(job.getInputPath()).toFile());
             if (input == null) {
@@ -169,7 +173,9 @@ public class ImageJobService {
                 ImageIO.write(output, "png", outputPath.toFile());
                 job.markDone(outputPath.toString());
             }
+            log.info("Job {} finished in {} ms", jobId, (System.nanoTime() - started) / 1_000_000);
         } catch (Exception e) {
+            log.warn("Job {} failed: {}", jobId, e.getMessage());
             job.markFailed(e.getMessage());
         }
 
