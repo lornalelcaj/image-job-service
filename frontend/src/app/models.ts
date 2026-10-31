@@ -29,3 +29,37 @@ export interface PuzzleInfo {
   margin: number;
   pieces: PieceInfo[];
 }
+
+// ----- Multiplayer rooms -----
+
+export interface RoomInfo {
+  code: string;
+  jobId: number;
+}
+
+export interface PlayerView {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface PieceView {
+  index: number;
+  x: number;
+  y: number;
+  placed: boolean;
+  lockedBy: string | null;
+}
+
+/** Messages the server sends over the room's WebSocket. */
+export type ServerMessage =
+  | { type: 'STATE'; you: string; players: PlayerView[]; pieces: PieceView[] }
+  | { type: 'PLAYERS'; players: PlayerView[] }
+  | { type: 'LOCKED'; piece: number; player: string }
+  | { type: 'MOVED'; piece: number; x: number; y: number; player: string }
+  | { type: 'RELEASED'; piece: number; x: number; y: number; placed: boolean };
+
+/** Messages the browser sends to the server. */
+export type ClientMessage =
+  | { type: 'GRAB'; piece: number }
+  | { type: 'MOVE' | 'DROP'; piece: number; x: number; y: number };

@@ -1,0 +1,30 @@
+.room-header {
+  margin-bottom: 12px;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 1.6rem;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+}
+
+.share {
+  display: flex;
+  gap: 8px;
+  max-width: 480px;
+}
+
+.share input {
+  flex: 1;
+  min-width: 0;
+}
+
+.hint {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.error {
+  color: #c62828;
+}

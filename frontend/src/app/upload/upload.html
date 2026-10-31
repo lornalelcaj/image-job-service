@@ -1,3 +1,12 @@
+<div class="join">
+  <span>Have a code from a friend?</span>
+  <input type="text" placeholder="ROOM CODE" maxlength="5"
+         [value]="joinCode()"
+         (input)="joinCode.set($any($event.target).value)"
+         (keyup.enter)="joinRoom()" />
+  <button type="button" [disabled]="!joinCode().trim()" (click)="joinRoom()">Join</button>
+</div>
+
 <input type="file" accept="image/*" (change)="onFileSelected($event)" />
 <p>Selected: {{ file()?.name }}</p>
 
@@ -31,6 +40,9 @@
   }
 
   @if (current.status === 'DONE') {
+    <button type="button" class="friends" [disabled]="creatingRoom()" (click)="playWithFriends(current.id)">
+      👥 Play with friends
+    </button>
     <app-board [jobId]="current.id" />
   }
 }

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Upload } from './upload/upload';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [Upload],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

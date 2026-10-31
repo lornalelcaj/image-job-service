@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Job, PuzzleInfo } from './models';
+import { Job, PuzzleInfo, RoomInfo } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class JobApi {
@@ -29,5 +29,13 @@ export class JobApi {
 
   getPieces(id: number): Observable<PuzzleInfo> {
     return this.http.get<PuzzleInfo>(`/jobs/${id}/pieces`);
+  }
+
+  createRoom(jobId: number): Observable<RoomInfo> {
+    return this.http.post<RoomInfo>('/rooms', { jobId });
+  }
+
+  getRoom(code: string): Observable<RoomInfo> {
+    return this.http.get<RoomInfo>(`/rooms/${encodeURIComponent(code)}`);
   }
 }
