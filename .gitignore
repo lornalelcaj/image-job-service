@@ -35,3 +35,5 @@ storage/
 preview.png
 piece.png
 .env
+result.png
+.DS_Store
